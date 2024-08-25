@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Accessibility Analyzer</title>
+</head>
+<body>
+    <h1>Upload an Image for Accessibility Analysis</h1>
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+        <label for="image">Select an image:</label>
+        <input type="file" id="image" name="image" accept="image/*" required><br><br>
+        
+        <label for="question">Enter a question:</label>
+        <textarea id="question" name="question" rows="4" cols="50" required></textarea><br><br>
+        
+        <input type="submit" value="Analyze Image">
+    </form>
+
+    {% if result %}
+    <h2>Analysis Result:</h2>
+    <p>{{ result }}</p>
+    {% endif %}
+</body>
+</html>

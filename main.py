@@ -1,18 +1,30 @@
+from flask import Flask, request, jsonify, render_template
 from model import Model
 
+app = Flask(__name__)
 
-def main():
-    question = """<image>\nAnalyze the screenshot for any accessibility issues. 
-    Focus on identifying problems such as lack of contrast, missing alt text,
-      missing labels, inaccessible forms, non-descriptive links, inaccessible
-        images, lack of keyboard accessibility, or improperly labeled controls. 
-        Provide a detailed description of any issues found."""
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-
-    response = Model().query("screenshot.png", question)
+@app.route('/analyze', methods=['POST'])
+def analyze_image():
+    if 'image' not in request.files:
+        return render_template('index.html', result="No image file provided.")
     
-    print(f'User: {question}\nAssistant: {response}')
+    image_file = request.files['image']
+    question = request.form.get('question')
+    
+    # Assume the image is saved in the same directory for simplicity
+    image_path = "uploaded_image.png"
+    image_file.save(image_path)
 
+    prompt =f"""<image>\n{question}"""
+    
+    # Get response from the model
+    response = Model().query(image_path, prompt)
+    
+    return render_template('index.html', result=response)
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
